@@ -32,7 +32,8 @@ let audioMan = new Music();
 // this.ring = wx.createInnerAudioContext();
 // let ring = new Audio();
 // this.ring.src = "res/ring.mp3"; // src 可以设置 http(s) 的路径，本地文件路径或者代码包文件路径
-
+let BLOOM_CNT = 30;//bloom持续时间
+let bloomCounter = 0;
 
 THREE.StereoEffect = function (renderer) {
 
@@ -418,7 +419,9 @@ function PlaySound() {
   // bflat.play();
   // ring.currentTime = 0
   audioMan.playRing();
-  bloomPass.strength = 1.3
+
+  bloomPass.strength = 1.3;
+  bloomCounter = BLOOM_CNT;
 }
 
 //calculate distance of the main object
@@ -578,6 +581,14 @@ setupShaderBloom();
 var percentage = 0;
 var prevTime = Date.now();
 function POV() {
+  //bloom取消
+if(bloomCounter > 0){
+  bloomCounter--;
+if(bloomCounter <= 0){
+  bloomPass.strength = 0.4;
+}
+}
+
   //加速
   percentage += 0.00025;
   // percentage += 0.00045;
