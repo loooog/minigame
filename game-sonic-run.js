@@ -19,7 +19,7 @@ import Music from './js/music'
 
 //低端设备iPhone5s比较卡
 //todo:  声音！  特效！ 模型！排行榜
-//缩减ppt-可视化的、录视频
+//录视频
 
 //后续：小程序的域名qcloud、发布 周期
 
@@ -115,6 +115,7 @@ var exitFullscreen = function(ele) {
   }
 };
 //===================================================== add canvas
+var bloomPass;
 let renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0xd8e7ff, 0);
@@ -417,6 +418,7 @@ function PlaySound() {
   // bflat.play();
   // ring.currentTime = 0
   audioMan.playRing();
+  bloomPass.strength = 1.3
 }
 
 //calculate distance of the main object
@@ -539,13 +541,13 @@ function setupShaderBloom() {
   var copyShader = new THREE.ShaderPass(THREE.CopyShader);
   copyShader.renderToScreen = true;
 
-  var bloomPass = new THREE.UnrealBloomPass(
+  bloomPass = new THREE.UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
     parameters.bloomStrength,
     parameters.bloomRadius,
     parameters.bloomThreshold
   );
-
+  // console.log(bloomPass.strength);
   composer = new THREE.EffectComposer(renderer);
   composer.setSize(window.innerWidth, window.innerHeight);
   composer.addPass(renderScene);
