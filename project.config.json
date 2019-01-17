@@ -1,0 +1,40 @@
+{
+	"description": "项目配置文件。",
+	"ignore": [
+		"models",
+		"game-ice.js",
+		"game-glb.js",
+		"game-digger.js",
+		"game-medusa.js",
+		"*.mp3"
+	],
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"compileType": "game",
+	"libVersion": "2.5.0",
+	"appid": "wx0f475a4d6f3db435",
+	"projectname": "wx-3-newadp",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": []
+		}
+	}
+}
