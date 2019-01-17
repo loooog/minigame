@@ -33,6 +33,7 @@ let audioMan = new Music();
 // let ring = new Audio();
 // this.ring.src = "res/ring.mp3"; // src 可以设置 http(s) 的路径，本地文件路径或者代码包文件路径
 let BLOOM_CNT = 30;//bloom持续时间
+let MAX_BLOOM_STRENGTH = 0.9;//bloom max
 let bloomCounter = 0;
 
 THREE.StereoEffect = function (renderer) {
@@ -131,6 +132,83 @@ window.addEventListener("resize", function() {
 });
 //===================================================== add Scene
 let scene = new THREE.Scene();
+//==============================飞机======================= add plane
+
+var planeGroup = new THREE.Object3D();
+var bladeGroup = new THREE.Object3D();
+bladeGroup.add(planeGroup);
+scene.add(planeGroup);
+
+var planeMaterial = new THREE.MeshLambertMaterial({ color: 0xf2ff0a });
+// var planeMaterialBlack = new THREE.MeshLambertMaterial({ color: 0x000000 });
+var planeMaterialBlack = new THREE.MeshLambertMaterial({ color: 0xeeaaee });
+var planeBody = new THREE.CylinderGeometry(0.8, 0.5, 3, 10);
+var planeTail = new THREE.CylinderGeometry(0.5, 0.1, 1.2, 10);
+var planeTailWing = new THREE.CubeGeometry(3, 0.2, 0.5);
+var planeFront = new THREE.CubeGeometry(1, 1, 1);
+var planeRotorMiddle = new THREE.SphereGeometry(0.5, 10, 1);
+var planeRotorBlade = new THREE.CubeGeometry(4, 0.2, 0.5);
+var planeRotorBlade2 = new THREE.CubeGeometry(4, 0.2, 0.5);
+var wing1 = new THREE.CubeGeometry(0.1, 1.5, 6);
+var wing2 = new THREE.CubeGeometry(0.1, 1.5, 6);
+var string = new THREE.CubeGeometry(0.2, 0.2, 1.6);
+var string1 = new THREE.CubeGeometry(0.2, 0.2, 1.6);
+var planeRotorBlade = new THREE.Mesh(planeRotorBlade, planeMaterialBlack);
+var planeRotorBlade2 = new THREE.Mesh(planeRotorBlade2, planeMaterialBlack);
+
+var string = new THREE.Mesh(string, planeMaterialBlack);
+var string1 = new THREE.Mesh(string1, planeMaterialBlack);
+var wing1 = new THREE.Mesh(wing1, planeMaterial);
+var wing2 = new THREE.Mesh(wing2, planeMaterial);
+var planeRotorMiddle = new THREE.Mesh(planeRotorMiddle, planeMaterial);
+var planeFront = new THREE.Mesh(planeFront, planeMaterial);
+var planeBody = new THREE.Mesh(planeBody, planeMaterial);
+var planeTail = new THREE.Mesh(planeTail, planeMaterial);
+var planeTailWing = new THREE.Mesh(planeTailWing, planeMaterial);
+
+planeFront.position.y = 1.5;
+planeRotorMiddle.position.y = 2;
+planeRotorBlade.position.y = 2.1;
+planeRotorBlade.rotation.y = 0.5 * Math.PI;
+planeRotorBlade2.position.y = 2.1;
+planeRotorBlade2.rotation.y = 15;
+wing1.rotation.y = 0.5 * Math.PI;
+wing2.rotation.y = 0.5 * Math.PI;
+wing2.position.z = -1.5;
+string.position.x = -2.2;
+string.position.z = -0.75;
+string1.position.x = 2.2;
+string1.position.z = -0.75;
+planeTail.position.y = -2.1;
+planeTailWing.position.y = -2;
+planeTailWing.rotation.x = 0.5 * Math.PI;
+
+
+planeGroup.position.x = -10;
+planeGroup.position.y = 20;
+planeGroup.position.z = 10;
+
+bladeGroup.add(planeRotorBlade);
+bladeGroup.add(planeRotorBlade2);
+
+planeGroup.add(wing1);
+planeGroup.add(wing2);
+planeGroup.add(bladeGroup);
+planeGroup.rotation.x = Math.PI / 2;
+planeGroup.add(planeBody);
+planeGroup.add(planeFront);
+planeGroup.add(planeRotorMiddle);
+planeGroup.add(string);
+planeGroup.add(string1);
+planeGroup.add(planeTail);
+planeGroup.add(planeTailWing);
+
+// planeGroup.rotation.y = -Math.PI / 2;
+planeGroup.scale.multiplyScalar(1/8);
+scene.add(planeGroup);
+
+
+//===================================================== add plane
 //===================================================== add Camera
 let camera = new THREE.PerspectiveCamera(
   45,
@@ -139,9 +217,9 @@ let camera = new THREE.PerspectiveCamera(
   10000
 );
 let cameraTarget = new THREE.Vector3(0, 0, 0);
-//===================================================== add Group
+//===================================================== add Group sonic 模型
 var group = new THREE.Group();
-scene.add(group);
+// scene.add(group);
 //===================================================== add Controls
 var controls = new THREE.OrbitControls(camera);
 controls.enableDamping = true;
@@ -420,7 +498,7 @@ function PlaySound() {
   // ring.currentTime = 0
   audioMan.playRing();
 
-  bloomPass.strength = 1.3;
+  bloomPass.strength = MAX_BLOOM_STRENGTH;
   bloomCounter = BLOOM_CNT;
 }
 
@@ -599,13 +677,21 @@ if(bloomCounter <= 0){
 
   camera.lookAt(p2);
   
-
+//sonic 的位置
   group.position.set(p3.x, p3.y + 0.25, p3.z);
   group.lookAt(p2);
   camera.position.x = p4.x + 2;
   camera.position.y = p4.y + 1;
   camera.position.z = p4.z + 2;
   camera.lookAt(group.position);
+
+  planeGroup.position.copy(group.position);
+  planeGroup.position.y += 0.33;
+  planeGroup.rotation.copy(group.rotation);
+  planeGroup.rotation.x = 0.5 * Math.PI;
+
+  bladeGroup.rotation.y += 0.3;
+
   if (jnjlogo) {
     // jnjlogo.position.copy(p2);
     jnjlogo.position.copy(group.position);
